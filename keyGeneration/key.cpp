@@ -6,6 +6,12 @@
 #include<vector>
 #include<array>
 using namespace std;
+struct rotation{
+	int roundNum;
+	int roundBit;
+};
+vector<rotation> LSI;
+
 #define SIZE_1 8  //rows and columns
 #define SIZE_2 7 //rows of PC-1 table
 template < class T >
@@ -32,6 +38,15 @@ void print2D(vector< vector<X>> x)
 }
 int main()
 {
+	//rotation schedule
+	LSI.push_back(rotation());
+	int roundNum[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
+	int  roundBit[] = { 1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1 };
+	for (int i = 0; i < 16; i++)
+	{
+		LSI.push_back({ roundNum[i], roundBit[i] });
+	}
+
 	vector< vector<int> > keyTable;    //2D  encryption key
 	vector<char> key;
 	vector<int> asciiKey, PC_1_key;
@@ -42,8 +57,7 @@ int main()
 	//PC-2 standard table
 	int pc_2_Table[] = {14,17,11,24,1,5,3,28,15,6,21,10,23,19,12,4,26,8,16,7,27,20,13,2,41,52,32,37,47,55,30,
 		                40,51,45,33,48,44,49,39,56,34,53,46,42,50,36,29,32};
-	//Logic Shift Left number of bits rotated
-	int LSI[] = { 1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1 };
+	
 	int ascii,k=7,z=0;
 	string  originalKey; 
 		cout << "Enter the key: ";

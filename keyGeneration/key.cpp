@@ -34,13 +34,12 @@ int main()
 {
 	vector< vector<int> > keyTable;    //2D  encryption key
 	vector<char> key;
-	vector<int> asciiKey;
-	vector<bitset<2> >  bitKey;
+	vector<int> asciiKey, PC_1_key;
 	int kTemp[64];
 	int pc_1_Table[] = {57,49,41,33,25,17,9,1,58,50,42,34,26,18,10,2,59,51,43,35,27,19,11,3,60,52,44,
 		                36,63,55,47,39,31,23,15,7,62,54,46,38,30,22,14,6,61,53,45,37,29,21,13,5,28,20,12,4};
-
-	int ascii,k=7,z=0;
+	
+	int ascii,k=7,z=0,y=7;
 	string  originalKey; 
 		cout << "Enter the key: ";
 	getline(cin, originalKey);
@@ -70,25 +69,49 @@ int main()
 		k = 7;
 	}
 	k = 0;
-	
+	//PC-1 generation into a vector
+	for (int i = 0; i < 56; i++)
+	{
+		PC_1_key.push_back( kTemp[pc_1_Table[i]-1]);
+	}
+
 	//2x2 64-bit key 
 	keyTable.resize(SIZE_1);    //allocate space for rows
 	for (int i = 0; i < SIZE_1; ++i)
 	{
-		keyTable[i].resize(SIZE_1);   //allocate space for columns
+		keyTable[i].resize(SIZE_2);   //allocate space for columns
 	}
 
 	//transfer the integer key to a 2x2 matrix 
 	for (int i = 0; i < SIZE_1; i++)
 	{
-		for (int j = 0; j< SIZE_1; j++)
+		for (int j = 0; j< SIZE_2; j++)
 		{
-			keyTable[i][j] = kTemp[j + k];
+			keyTable[i][j] = PC_1_key[j+k];
 		}
-		k += 8;
+		k += 7;
 	}
     print2D(keyTable);
 	
 	system("pause");
 	return 0;
 }
+//transfer the integer key to a 2x2 matrix 
+//for (int i = 0; i < SIZE_1; i++)
+//{
+//	for (int j = 0; j< SIZE_1; j++)
+//	{
+//		keyTable[i][j] = kTemp[j + k];
+//	}
+//	k += 8;
+//}
+
+//print pc-1 table of the key
+//for (int i = 0; i < SIZE_1; i++)
+//{
+//	for (int j = 0; j< SIZE_2; j++)
+//	{
+//		keyTable[i][j] = PC_1_key[j + k];
+//	}
+//	k += 7;
+//}

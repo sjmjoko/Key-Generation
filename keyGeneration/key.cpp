@@ -74,24 +74,27 @@ int main()
 	{
 		PC_1_key.push_back( kTemp[pc_1_Table[i]-1]);
 	}
-
+	//split the PC-1
+	vector<int> C(PC_1_key.begin(), PC_1_key.begin() + PC_1_key.size() / 2);
+	vector<int> D(PC_1_key.begin() + PC_1_key.size() / 2, PC_1_key.end());
+	print(C);
 	//2x2 64-bit key 
-	keyTable.resize(SIZE_1);    //allocate space for rows
-	for (int i = 0; i < SIZE_1; ++i)
-	{
-		keyTable[i].resize(SIZE_2);   //allocate space for columns
-	}
+	//keyTable.resize(SIZE_1);    //allocate space for rows
+	//for (int i = 0; i < SIZE_1; ++i)
+	//{
+	//	keyTable[i].resize(SIZE_2);   //allocate space for columns
+	//}
 
-	//transfer the integer key to a 2x2 matrix 
-	for (int i = 0; i < SIZE_1; i++)
-	{
-		for (int j = 0; j< SIZE_2; j++)
-		{
-			keyTable[i][j] = PC_1_key[j+k];
-		}
-		k += 7;
-	}
-    print2D(keyTable);
+	////transfer the integer key to a 2x2 matrix 
+	//for (int i = 0; i < SIZE_1; i++)
+	//{
+	//	for (int j = 0; j< SIZE_2; j++)
+	//	{
+	//		keyTable[i][j] = PC_1_key[j+k];
+	//	}
+	//	k += 7;
+	//}
+   // print2D(keyTable);
 	
 	system("pause");
 	return 0;

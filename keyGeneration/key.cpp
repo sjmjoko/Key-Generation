@@ -144,3 +144,69 @@ int main()
 //plain.insert(plain.begin() + 1 + j, 'x')
 //	encryptionKey.insert(encryptionKey.end(), keyCode.begin(), keyCode.end());      //insert the key  
 //encryptionKey.insert(encryptionKey.end(), alphaCode.begin(), alphaCode.end());    //merge the alphabets with the key
+
+//concatenating two vectors
+//AB.reserve(A.size() + B.size()); // preallocate memory
+//AB.insert(AB.end(), A.begin(), A.end());
+//AB.insert(AB.end(), B.begin(), B.end());
+
+//rotation 
+//#include <iostream>
+//#include <string>
+//#include <cstdlib>
+//#include <ctime>
+//#include<bitset>
+//#include<vector>
+//#include<array>
+//#include<algorithm>
+//using namespace std;
+//struct rotation{
+//	int roundNum;
+//	int roundBit;
+//};
+//vector<rotation> LSI;
+//template < class T >
+//void print(vector<T> v)
+//{
+//	for (int i = 0; i < v.size(); i++)
+//	{
+//		cout << v[i] << " ";
+//	}
+//	cout << endl;
+//}
+//int main()
+//{
+//
+//	vector<int> v, w, x;
+//	//rotation schedule
+//	LSI.push_back(rotation());
+//	int roundNum[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
+//	int  roundBit[] = { 1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1 };
+//	for (int i = 0; i < 16; i++)
+//	{
+//		LSI.push_back({ roundNum[i], roundBit[i] });
+//	}
+//	for (int i = 0; i < 6; i++)
+//	{
+//		v.push_back(i);
+//	}
+//	for (int i = 6; i < 11; i++)
+//	{
+//		w.push_back(i);
+//	}
+//	x.reserve(v.size() + w.size());
+//	x.insert(x.end(), v.begin(), v.end());
+//	x.insert(x.end(), w.begin(), w.end());
+//	print(x);
+//	/*	for (int i = 1; i < 17; i++)
+//	{
+//	cout << LSI[i].roundNum << " " << LSI[i].roundBit << endl;
+//	}*/
+//	rotate(v.begin(), v.begin() + 1, v.end());
+//	rotate(w.begin(), w.begin() + 1, w.end());
+//	x.insert(x.end(), v.begin(), v.end());
+//	x.insert(x.end(), w.begin(), w.end());
+//	print(x);
+//	system("pause");
+//	return 0;
+//}

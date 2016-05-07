@@ -5,13 +5,16 @@
 #include<bitset>
 #include<vector>
 #include<array>
+#include<algorithm>
 using namespace std;
 struct rotation{
 	int roundNum;
 	int roundBit;
 };
 vector<rotation> LSI;
-
+#define ROWS 16
+#define COLUMNS 56
+#define PC_2_COLS 48
 #define SIZE_1 8  //rows and columns
 #define SIZE_2 7 //rows of PC-1 table
 template < class T >
@@ -47,9 +50,9 @@ int main()
 		LSI.push_back({ roundNum[i], roundBit[i] });
 	}
 
-	vector< vector<int> > keyTable;    //2D  encryption key
+	vector< vector<int> > encryptionKey,tempKey;    //2D  encryption key
 	vector<char> key;
-	vector<int> asciiKey, PC_1_key;
+	vector<int> asciiKey, PC_1_key,x;
 	int kTemp[64];
 	//PC-1 standard table
 	int pc_1_Table[] = {57,49,41,33,25,17,9,1,58,50,42,34,26,18,10,2,59,51,43,35,27,19,11,3,60,52,44,
@@ -58,9 +61,9 @@ int main()
 	int pc_2_Table[] = {14,17,11,24,1,5,3,28,15,6,21,10,23,19,12,4,26,8,16,7,27,20,13,2,41,52,32,37,47,55,30,
 		                40,51,45,33,48,44,49,39,56,34,53,46,42,50,36,29,32};
 	
-	int ascii,k=7,z=0;
+	int ascii,k=7,z=0,q=0;
 	string  originalKey; 
-		cout << "Enter the key: ";
+	cout << "Enter the key: ";
 	getline(cin, originalKey);
 	for (int i = 0; i < originalKey.length(); i++)
 	{
@@ -87,7 +90,27 @@ int main()
 		z += 8;
 		k = 7;
 	}
-	k = 0;
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			cout << kTemp[j + q] << " ";
+		}
+		q += 8;
+		cout << endl;
+	}
+	cout << endl;
+	//temporary key to hold
+	tempKey.resize(ROWS);    //allocate space for rows
+	for (int i = 0; i < ROWS; ++i)
+	{
+		tempKey[i].resize(COLUMNS);   //allocate space for columns
+	}
+	encryptionKey.resize(ROWS);
+	for (int i = 0; i < ROWS; ++i)
+	{
+		encryptionKey[i].resize(PC_2_COLS);   //allocate space for columns
+	}
 	//PC-1 generation into a vector
 	for (int i = 0; i < 56; i++)
 	{
@@ -96,51 +119,27 @@ int main()
 	//split the PC-1
 	vector<int> L(PC_1_key.begin(), PC_1_key.begin() + PC_1_key.size() / 2);
 	vector<int> R(PC_1_key.begin() + PC_1_key.size() / 2, PC_1_key.end());
-	
-	////2x2 64-bit key 
-	//keyTable.resize(SIZE_1);    //allocate space for rows
-	//for (int i = 0; i < SIZE_1; ++i)
-	//{
-	//	keyTable[i].resize(SIZE_2);   //allocate space for columns
-	//}
-
-	////transfer the integer key to a 2x2 matrix 
-	//for (int i = 0; i < SIZE_1; i++)
-	//{
-	//	for (int j = 0; j< SIZE_2; j++)
-	//	{
-	//		keyTable[i][j] = PC_1_key[j+k];
-	//	}
-	//	k += 7;
-	//}
- //   print2D(keyTable);
+	x.reserve(L.size() + R.size());
+	for (int i = 0; i < 16; i++)
+	{
+		rotate(L.begin(), L.begin() + roundBit[i], L.end());
+		rotate(R.begin(), R.begin() + roundBit[i], R.end());
+		x.insert(x.end(), L.begin(), L.end());
+		x.insert(x.end(), R.begin(), R.end());
+		for (int j = 0; j < 56; j++)
+		{
+			tempKey[i][j] = x[j];
+		}
+		x.clear();
+	}
+	for (int i = 0; i < ROWS; i++)
+	{
+	for (int j = 0; j < PC_2_COLS; j++)
+	{
+	encryptionKey[i][j] = tempKey[i][pc_2_Table[j]-1];
+	}
+	}
 	
 	system("pause");
 	return 0;
 }
-//transfer the integer key to a 2x2 matrix 
-//for (int i = 0; i < SIZE_1; i++)
-//{
-//	for (int j = 0; j< SIZE_1; j++)
-//	{
-//		keyTable[i][j] = kTemp[j + k];
-//	}
-//	k += 8;
-//}
-
-//print pc-1 table of the key
-//for (int i = 0; i < SIZE_1; i++)
-//{
-//	for (int j = 0; j< SIZE_2; j++)
-//	{
-//		keyTable[i][j] = PC_1_key[j + k];
-//	}
-//	k += 7;
-//}
-
-//concatenating two vectors
-//vector1.insert( vector1.end(), vector2.begin(), vector2.end() );
-//inserting an element
-//plain.insert(plain.begin() + 1 + j, 'x')
-//	encryptionKey.insert(encryptionKey.end(), keyCode.begin(), keyCode.end());      //insert the key  
-//encryptionKey.insert(encryptionKey.end(), alphaCode.begin(), alphaCode.end());    //merge the alphabets with the key

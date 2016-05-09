@@ -37,7 +37,6 @@ void print2D(vector< vector<X>> x)
 		}
 		cout << endl;
 	}
-
 }
 int main()
 {
@@ -99,6 +98,7 @@ int main()
 		q += 8;
 		cout << endl;
 	}
+	q = 0;
 	cout << endl;
 	//temporary key to hold
 	tempKey.resize(ROWS);    //allocate space for rows
@@ -116,6 +116,8 @@ int main()
 	{
 		PC_1_key.push_back( kTemp[pc_1_Table[i]-1]);
 	}
+	cout<<endl;
+
 	//split the PC-1
 	vector<int> L(PC_1_key.begin(), PC_1_key.begin() + PC_1_key.size() / 2);
 	vector<int> R(PC_1_key.begin() + PC_1_key.size() / 2, PC_1_key.end());
@@ -130,16 +132,19 @@ int main()
 		{
 			tempKey[i][j] = x[j];
 		}
-		x.clear();
+		x.clear();  
 	}
+	print2D(tempKey);
+	//conversion to PC-2 table
+	//Each row represents a key, there are 16 keys available
 	for (int i = 0; i < ROWS; i++)
 	{
-	for (int j = 0; j < PC_2_COLS; j++)
-	{
-	encryptionKey[i][j] = tempKey[i][pc_2_Table[j]-1];
+	    for (int j = 0; j < PC_2_COLS; j++)
+		{
+	        encryptionKey[i][j] = tempKey[i][pc_2_Table[j]-1];
+	    }
 	}
-	}
-	
+	print2D(encryptionKey);
 	system("pause");
 	return 0;
 }

@@ -80,6 +80,9 @@
   <ItemGroup>
     <ClCompile Include="key.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="keyHeader.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

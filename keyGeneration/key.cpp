@@ -6,12 +6,23 @@
 #include<vector>
 #include<array>
 #include<algorithm>
+#include"keyHeader.h"
+//PC-1 Table
+int pc_1_Table[] = { 57, 49, 41, 33, 25, 17, 9, 1, 58, 50, 42, 34, 26, 18, 10, 2, 59, 51, 43, 35, 27, 19, 11, 3, 60, 52, 44,
+36, 63, 55, 47, 39, 31, 23, 15, 7, 62, 54, 46, 38, 30, 22, 14, 6, 61, 53, 45, 37, 29, 21, 13, 5, 28, 20, 12, 4 };
+//PC-2 Table
+int pc_2_Table[] = { 14, 17, 11, 24, 1, 5, 3, 28, 15, 6, 21, 10, 23, 19, 12, 4, 26, 8, 16, 7, 27, 20, 13, 2, 41, 52, 32, 37, 47, 55, 30,
+40, 51, 45, 33, 48, 44, 49, 39, 56, 34, 53, 46, 42, 50, 36, 29, 32 };
+//IP-1 Table
+int IP_1[] = { 58, 50, 42, 34, 26, 18, 10, 2, 60, 52, 44, 36, 28, 20, 12, 4, 62, 54, 46, 38, 30, 22, 14, 6, 64, 56, 48, 40, 32, 24, 16, 8,
+57, 49, 41, 33, 25, 17, 9, 1, 9, 51, 43, 35, 27, 19, 11, 3, 61, 53, 45, 37, 29, 21, 13, 5, 63, 55, 47, 39, 31, 23, 15, 7 };
+//IP-2 Table
+int IP_2[] = { 40, 8, 48, 16, 56, 24, 64, 32, 39, 7, 47, 15, 55, 23, 63, 31, 38, 6, 46, 14, 54, 22, 62, 30, 37, 5, 45, 13, 53, 21, 61, 29, 36,
+4, 44, 12, 52, 20, 60, 28, 35, 3, 43, 11, 51, 19, 59, 27, 34, 2, 42, 10, 50, 18, 58, 26, 33, 1, 41, 9, 49, 17, 57, 25 };
+//Expansion Table
+int expansion[] = { 32, 1, 2, 3, 4, 5, 4, 5, 6, 7, 8, 9, 8, 9, 10, 11, 12, 13, 12, 13, 14, 15, 16, 17,
+16, 17, 18, 19, 20, 21, 20, 21, 22, 23, 24, 25, 24, 25, 26, 27, 28, 29, 28, 29, 30, 31, 32, 1 };
 using namespace std;
-#define ROWS 16
-#define COLUMNS 56
-#define PC_2_COLS 48
-#define SIZE_1 8  //rows and columns
-#define SIZE_2 7 //rows of PC-1 table
 template < class T >
 void print(vector<T> v)
 {
@@ -33,7 +44,7 @@ void print2D(vector< vector<X>> x)
 		cout << endl;
 	}
 }
-vector<int> toASCII(vector<int> &v,vector<char> &key)
+vector<int> toASCII(vector<int> &v, vector<char> &key)
 {
 	int ascii;
 	for (int i = 0; i <key.size(); i++)
@@ -43,13 +54,13 @@ vector<int> toASCII(vector<int> &v,vector<char> &key)
 	}
 	return v;
 }
-void toBINARY(vector<int> &ascii,int temp[])
+int* toBINARY(vector<int> &ascii, int temp[])
 {
 	int k = 7, z = 0;
 	for (int i = 0; i < SIZE_1; i++)
 	{
 		bitset<8> p(ascii[i]);
-		
+
 		for (int j = 0; j < SIZE_1; j++)
 		{
 			temp[z + j] = p[k];
@@ -58,24 +69,27 @@ void toBINARY(vector<int> &ascii,int temp[])
 		z += 8;
 		k = 7;
 	}
+	return temp;
 }
 template<class Y>
-void Resize(vector<vector<Y> > &v, int rows, int columns)
+vector<vector<int> > Resize(vector<vector<Y> > &v, int rows, int columns)
 {
 	v.resize(rows);
 	for (int i = 0; i < rows; ++i)
 	{
 		v[i].resize(columns);   //allocate space for columns
 	}
+	return v;
 }
-void pc1(int kt[], vector<int> &pk,int a[])
+vector<int> pc1(int kt[],vector<int> &pk)
 {
 	for (int i = 0; i < 56; i++)
 	{
-		pk.push_back( kt[a[i]-1]);
+		pk.push_back(kt[pc_1_Table[i] - 1]);
 	}
+	return pk;
 }
-void rotationSchedule(vector<vector<int> > &tk, vector<int> &pc, vector<int> x)
+vector<vector<int> > rotationSchedule(vector<vector<int> > &tk, vector<int> &pc, vector<int> x)
 {
 	int  roundBit[] = { 1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1 };
 	vector<int> L(pc.begin(), pc.begin() + pc.size() / 2);
@@ -91,33 +105,24 @@ void rotationSchedule(vector<vector<int> > &tk, vector<int> &pc, vector<int> x)
 		{
 			tk[i][j] = x[j];
 		}
-		x.clear();  
+		x.clear();
 	}
+	return tk;
 }
-void pc2(vector<vector<int> > &v, vector<vector<int> > &k, int a[])
+vector<vector<int> > pc2(vector<vector<int> > &v, vector<vector<int> > &k, int a[])
 {
 	for (int i = 0; i < ROWS; i++)
 	{
-	    for (int j = 0; j < PC_2_COLS; j++)
+		for (int j = 0; j < PC_2_COLS; j++)
 		{
-	        k[i][j] = v[i][a[j]-1];
-	    }
+			k[i][j] = v[i][a[j] - 1];
+		}
 	}
+	return k;
 }
 int main()
-{	
-	vector< vector<int> > encryptionKey,tempKey;    //2D  encryption key
-	vector<char> key;
-	vector<int> asciiKey, PC_1_key,x;
-	int kTemp[64];
-	//PC-1 standard table
-	int pc_1_Table[] = {57,49,41,33,25,17,9,1,58,50,42,34,26,18,10,2,59,51,43,35,27,19,11,3,60,52,44,
-		                36,63,55,47,39,31,23,15,7,62,54,46,38,30,22,14,6,61,53,45,37,29,21,13,5,28,20,12,4};
-	//PC-2 standard table
-	int pc_2_Table[] = {14,17,11,24,1,5,3,28,15,6,21,10,23,19,12,4,26,8,16,7,27,20,13,2,41,52,32,37,47,55,30,
-		                40,51,45,33,48,44,49,39,56,34,53,46,42,50,36,29,32};
-	int ascii,q=0;
-	string  originalKey; 
+{
+	string  originalKey;
 	cout << "Enter the key: ";
 	getline(cin, originalKey);
 	//transfer key to vector
@@ -134,7 +139,7 @@ int main()
 	Resize(tempKey, ROWS, COLUMNS);
 	Resize(encryptionKey, ROWS, PC_2_COLS);
 	//perform PC-1 permutation
-	pc1(kTemp, PC_1_key, pc_1_Table);
+	pc1(kTemp, PC_1_key);
 	//key rotation schedule
 	rotationSchedule(tempKey, PC_1_key, x);
 	////conversion to PC-2 table

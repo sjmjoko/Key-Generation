@@ -34,17 +34,17 @@ void print2D(vector< vector<X>> x);
 vector<int> toASCII(vector<int> &v, vector<char> &key);
 int* toBINARY(vector<int> &ascii, int temp[]);
 template<class Y>
-vector<vector<int> > Resize(vector<vector<Y> > &v, int rows, int columns);
+void Resize(vector<vector<Y> > &v, int rows, int columns);
 vector<int> pc1(int kt[], vector<int> &pk);
 vector<vector<int> > rotationSchedule(vector<vector<int> > &tk, vector<int> &pc, vector<int> x);
 vector<vector<int> > pc2(vector<vector<int> > &v, vector<vector<int> > &k, int a[]);
 //message generation functions
-void ip1_permutation(vector<vector<int>> &a, int c[]);
+vector<vector<int> > ip1_permutation(vector<vector<int>> &a, int c[]);
 vector<char> deleteSpaces(vector<char> & v);
 vector<char> addFillers(vector<char> & v);
-void toAscii(vector<vector <char> > &c, vector<vector < int> > &v, int rownum);
-void expansionTable(vector<int> &right, vector<int> temp);
-int XOR(vector<vector<int> > &k, vector<int> &t, vector<int> &c, int rowkey);
-void toBinary(vector<vector<int> > &ascii, vector<vector<int> > &bin, vector<int> &mes, int rows);
-
+vector<vector < int> > toAscii(vector<vector <char> > &c, vector<vector < int> > &v, int rownum);
+//vector<int> expansionTable(vector<int> &right, vector<int> temp);
+vector<int> XOR(vector<vector<int> > &k, vector<int> &t, vector<int> &c, int rowkey);
+vector<vector<int> > toBinary(vector<vector<int> > &ascii, vector<vector<int> > &bin, vector<int> &mes, int rows); //mes is a temp vector
+//void encryption(vector<vector<int> > &text, vector<vector<int> > &key, vector<int> cipher, int textRows);
 #endif

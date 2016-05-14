@@ -17,7 +17,7 @@
 using namespace std;
 vector< vector<int> > encryptionKey, tempKey, textBin, textAscii, textMsg;    //2D  encryption key,binary text message
 vector<char> key, msg;         //char key and message
-vector<int> asciiKey, PC_1_key, x, asciiMsg, msgTemp, ipMsg;
+vector<int> asciiKey, PC_1_key, x, asciiMsg, msgTemp, ipMsg, tempTextRight,cipherText,rightText; //convert the cipher int a 2D vector
 int kTemp[64];
 vector<vector<char> > textChar;
 
@@ -43,7 +43,7 @@ vector<vector<int> > ip1_permutation(vector<vector<int>> &a, int c[]);
 vector<char> deleteSpaces(vector<char> & v);
 vector<char> addFillers(vector<char> & v);
 vector<vector < int> > toAscii(vector<vector <char> > &c, vector<vector < int> > &v, int rownum);
-//vector<int> expansionTable(vector<int> &right, vector<int> temp);
+vector<int> expansionTable(vector<int> &right, vector<int> &temp);
 vector<int> XOR(vector<vector<int> > &k, vector<int> &t, vector<int> &c, int rowkey);
 vector<vector<int> > toBinary(vector<vector<int> > &ascii, vector<vector<int> > &bin, vector<int> &mes, int rows); //mes is a temp vector
 //void encryption(vector<vector<int> > &text, vector<vector<int> > &key, vector<int> cipher, int textRows);

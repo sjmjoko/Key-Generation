@@ -22,6 +22,7 @@ int IP_2[] = { 40, 8, 48, 16, 56, 24, 64, 32, 39, 7, 47, 15, 55, 23, 63, 31, 38,
 //Expansion Table
 int expansion[] = { 32, 1, 2, 3, 4, 5, 4, 5, 6, 7, 8, 9, 8, 9, 10, 11, 12, 13, 12, 13, 14, 15, 16, 17,
 16, 17, 18, 19, 20, 21, 20, 21, 22, 23, 24, 25, 24, 25, 26, 27, 28, 29, 28, 29, 30, 31, 32, 1 };
+
 using namespace std;
 //KEY GENERATION FUNCTION
 template < class T >
@@ -163,17 +164,15 @@ vector<vector < int> > toAscii(vector<vector <char> > &c, vector<vector < int> >
 	}
 	return v;
 }
-template<class Y>
-//vector<int> expansionTable(vector<int> &right, vector<int> temp)
-//{
-//	int arr[] = { 32, 1, 2, 3, 4, 5, 4, 5, 6, 7, 8, 9, 8, 9, 10, 11, 12, 13, 12, 13, 14, 15, 16, 17,
-//		16, 17, 18, 19, 20, 21, 20, 21, 22, 23, 24, 25, 24, 25, 26, 27, 28, 29, 28, 29, 30, 31, 32, 1 };
-//	for (int i = 0; i < 48; i++)
-//	{
-//		right.push_back(temp[arr[i] - 1]);
-//	}
-//	return right;
-//}
+//template<class Y>
+vector<int> expansionTable(vector<int> &right, vector<int> &temp)
+{
+	for (int i = 0; i < 48; i++)
+	{
+		right.push_back(temp[expansion[i] - 1]);
+	}
+	return right;
+}
 vector<int> XOR(vector<vector<int> > &k, vector<int> &t, vector<int> &c, int rowkey) //pass the row of the key being used
 {
 	int a, b;
@@ -237,37 +236,18 @@ vector<vector<int> > toBinary(vector<vector<int> > &ascii, vector<vector<int> > 
 //}
 int main()
 {
-	//string  originalKey;
-	//cout << "Enter the key: ";
-	//getline(cin, originalKey);
-	////transfer key to vector
-	//for (int i = 0; i < originalKey.length(); i++)
-	//{
-	//	key.push_back(originalKey[i]);
-	//}
-	//cout << endl;
-	////convert key to ASCII CODE
-	////GENERATION OF THE ENCRYPTION
-	//toASCII(asciiKey, key);
-	////populate the bits of the key to an integer array 
-	//toBINARY(asciiKey, kTemp);
-	////resize any 2D-arrays to be used
-	//Resize(tempKey, ROWS, COLUMNS);
-	//Resize(encryptionKey, ROWS, PC_2_COLS);
-	////perform PC-1 permutation
-	//pc1(kTemp, PC_1_key);
-	////key rotation schedule
-	//rotationSchedule(tempKey, PC_1_key, x);
-	//////conversion to PC-2 table
-	//pc2(tempKey, encryptionKey, pc_2_Table);
-	//print2D(encryptionKey);
-
-	//GENERATION OF THE PLAIN TEXT
 	int k = 7, z = 0, l = 0;
 	char t;
+	string  originalKey;
+	cout << "Enter the key: ";
+	getline(cin, originalKey);
 	cout << "Enter the message: ";
 	getline(cin, message);
-
+	//transfer key to vector
+	for (int i = 0; i < originalKey.length(); i++)
+	{
+		key.push_back(originalKey[i]);
+	}
 	//transfer string message to string message
 	for (int i = 0; i < message.length(); i++)
 	{
@@ -278,11 +258,28 @@ int main()
 	//add filler character if message is not in blocks of 8
 	addFillers(msg);
 	int rows = msg.size() / 8;
-	cout << rows << endl;
-	//resize vectors
+	cout << endl;
+	//convert key to ASCII CODE
+	//GENERATION OF THE ENCRYPTION
+	toASCII(asciiKey, key);
+	//populate the bits of the key to an integer array 
+	toBINARY(asciiKey, kTemp);
+	//resize any 2D-arrays to be used
+	Resize(tempKey, ROWS, COLUMNS);
+	Resize(encryptionKey, ROWS, PC_2_COLS);
 	Resize(textChar, rows, 8);
 	Resize(textAscii, rows, 8);
 	Resize(textBin, rows, 64);
+	//perform PC-1 permutation
+	pc1(kTemp, PC_1_key);
+	//key rotation schedule
+	rotationSchedule(tempKey, PC_1_key, x);
+	////conversion to PC-2 table
+	pc2(tempKey, encryptionKey, pc_2_Table);
+	/*print2D(encryptionKey);*/
+	cout << encryptionKey[0].size() << endl;
+	//GENERATION OF THE PLAIN TEXT
+	/*cout << rows << endl;*/
 	//transfer the message to a 2D character vector
 	for (int i = 0; i < rows; i++)
 	{
@@ -300,7 +297,17 @@ int main()
 	toBinary(textAscii, textBin, msgTemp, rows);
 	//IP-1 permutation
 	ip1_permutation(textBin, IP_1);
-	print2D(textBin);
+	/*print2D(textBin);*/
+	cout << endl;
+	//generate the text to be encrypted
+	for (int i = 32; i < textBin[0].size(); i++)
+	{
+		tempTextRight.push_back(textBin[0][i]);
+	}
+	expansionTable(rightText, tempTextRight);
+	cout << rightText.size() << endl;
+	tempTextRight.clear();
+	/*XOR(encryptionKey, tempText, cipherText, 0);*/
 	system("pause");
 	return 0;
 }

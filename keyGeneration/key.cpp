@@ -22,6 +22,34 @@ int IP_2[] = { 40, 8, 48, 16, 56, 24, 64, 32, 39, 7, 47, 15, 55, 23, 63, 31, 38,
 //Expansion Table
 int expansion[] = { 32, 1, 2, 3, 4, 5, 4, 5, 6, 7, 8, 9, 8, 9, 10, 11, 12, 13, 12, 13, 14, 15, 16, 17,
 16, 17, 18, 19, 20, 21, 20, 21, 22, 23, 24, 25, 24, 25, 26, 27, 28, 29, 28, 29, 30, 31, 32, 1 };
+//S-BOX ARRAYS
+int S1[][16] = { { 14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7 },
+{ 0, 15, 7, 4, 14, 2, 13, 1, 10, 6, 12, 11, 9, 5, 3, 8 },
+{ 4, 1, 14, 8, 13, 6, 2, 11, 15, 12, 9, 7, 3, 10, 5, 0 },
+{ 15, 12, 8, 2, 4, 9, 1, 7, 5, 11, 3, 14, 10, 0, 6, 13 } };int S2[][16] = { { 15, 1, 8, 14, 6, 11, 3, 4, 9, 7, 2, 13, 12, 0, 5, 10 },
+{ 3, 13, 4, 7, 15, 2, 8, 14, 12, 0, 1, 10, 6, 9, 11, 5 },
+{ 0, 14, 7, 11, 10, 4, 13, 1, 5, 8, 12, 6, 9, 3, 2, 15 },
+{ 13, 8, 10, 1, 3, 15, 4, 2, 11, 6, 7, 12, 0, 5, 14, 9 } };int S3[][16] = { { 10, 0, 9, 14, 6, 3, 15, 5, 1, 13, 12, 7, 11, 4, 2, 8 },
+{ 13, 7, 0, 9, 3, 4, 6, 10, 2, 8, 5, 14, 12, 11, 15, 1 },
+{ 13, 6, 4, 9, 8, 15, 3, 0, 11, 1, 2, 12, 5, 10, 14, 7 },
+{ 1, 10, 13, 0, 6, 9, 8, 7, 4, 15, 14, 3, 11, 5, 2, 12 } };int S4[][16] = { { 7, 13, 14, 3, 0, 6, 9, 10, 1, 2, 8, 5, 11, 12, 4, 15 },
+{ 13, 8, 11, 5, 6, 15, 0, 3, 4, 7, 2, 12, 1, 10, 14, 9 },
+{ 10, 6, 9, 0, 12, 11, 7, 13, 15, 1, 3, 14, 5, 2, 8, 4 },
+{ 3, 15, 0, 6, 10, 1, 13, 8, 9, 4, 5, 11, 12, 7, 2, 14 } };int S5[][16] = { { 2, 12, 4, 1, 7, 10, 11, 6, 8, 5, 3, 15, 13, 0, 14, 9 },
+{ 14, 11, 2, 12, 4, 7, 13, 1, 5, 0, 15, 10, 3, 9, 8, 6 },
+{ 4, 2, 1, 11, 10, 13, 7, 8, 15, 9, 12, 5, 6, 3, 0, 14 },
+{ 11, 8, 12, 7, 1, 14, 2, 13, 6, 15, 0, 9, 10, 4, 5, 3 } };int S6[][16] = { { 2, 12, 4, 1, 7, 10, 11, 6, 8, 5, 3, 15, 13, 0, 14, 9 },
+{ 14, 11, 2, 12, 4, 7, 13, 1, 5, 0, 15, 10, 3, 9, 8, 6 },
+{ 4, 2, 1, 11, 10, 13, 7, 8, 15, 9, 12, 5, 6, 3, 0, 14 },
+{ 11, 8, 12, 7, 1, 14, 2, 13, 6, 15, 0, 9, 10, 4, 5, 3 } };
+
+int S7[][16] = { { 4, 11, 2, 14, 15, 0, 8, 13, 3, 12, 9, 7, 5, 10, 6, 1 },
+{ 13, 0, 11, 7, 4, 9, 1, 10, 14, 3, 5, 12, 2, 15, 8, 6 },
+{ 1, 4, 11, 13, 12, 3, 7, 14, 10, 15, 6, 8, 0, 5, 9, 2 },
+{ 6, 11, 13, 8, 1, 4, 10, 7, 9, 5, 0, 15, 14, 2, 3, 12 } };int S8[][16] = { { 13, 2, 8, 4, 6, 15, 11, 1, 10, 9, 3, 14, 5, 0, 12, 7 },
+{ 1, 15, 13, 8, 10, 3, 7, 4, 12, 5, 6, 11, 0, 14, 9, 2 },
+{ 7, 11, 4, 1, 9, 12, 14, 2, 0, 6, 10, 13, 15, 3, 5, 8 },
+{ 2, 1, 14, 7, 4, 10, 8, 13, 15, 12, 9, 0, 3, 5, 6, 11 } };
 
 using namespace std;
 //KEY GENERATION FUNCTION
@@ -164,7 +192,6 @@ vector<vector < int> > toAscii(vector<vector <char> > &c, vector<vector < int> >
 	}
 	return v;
 }
-//template<class Y>
 vector<int> expansionTable(vector<int> &right, vector<int> &temp)
 {
 	for (int i = 0; i < 48; i++)
@@ -213,6 +240,97 @@ vector<vector<int> > toBinary(vector<vector<int> > &ascii, vector<vector<int> > 
 		e++;
 	}
 	return bin;
+}
+
+//ENCRYPTION FUNCTIONS
+vector<vector<int> > to2D(vector<vector<int> > &v, vector<int> a)
+{
+	int t=0;
+	Resize(v, 8, 6);
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 6; j++)
+		{
+			v[i][j] = a[j+t];
+		}
+		t += 6;
+	}
+	return v;
+}
+int row(int a, int b)
+{
+	int c = 2 * a + b;
+	return c;
+}
+int column(int a, int b, int c, int d)
+{
+	int e = 8 * a + 4 * b + c * 2 + d;
+	return e;
+}
+void sBox(vector<vector<int> > &v, vector<int> &x)
+{
+	int d;
+	d = S1[row(v[0][0], v[0][5])][column(v[0][1], v[0][2], v[0][3], v[0][4])];
+	bitset<4> a(d);
+	for (int j = 3; j >= 0; j--)
+	{
+		x.push_back(a[j]);
+	}
+
+	d = S2[row(v[1][0], v[1][5])][column(v[1][1], v[1][2], v[1][3], v[1][4])];
+	bitset<4> b(d);
+	for (int j = 3; j >= 0; j--)
+	{
+		x.push_back(b[j]);
+	}
+
+	d = S3[row(v[2][0], v[2][5])][column(v[2][1], v[2][2], v[2][3], v[2][4])];
+	bitset<4> c(d);
+	for (int j = 3; j >= 0; j--)
+	{
+		x.push_back(c[j]);
+	}
+
+	d = S4[row(v[3][0], v[3][5])][column(v[3][1], v[3][2], v[3][3], v[3][4])];
+	bitset<4> e(d);
+	for (int j = 3; j >= 0; j--)
+	{
+		x.push_back(e[j]);
+	}
+
+	d = S5[row(v[4][0], v[4][5])][column(v[4][1], v[4][2], v[4][3], v[4][4])];
+	bitset<4> f(d);
+	for (int j = 3; j >= 0; j--)
+	{
+		x.push_back(f[j]);
+	}
+
+	d = S6[row(v[5][0], v[5][5])][column(v[5][1], v[5][2], v[5][3], v[5][4])];
+	bitset<4> g(d);
+	for (int j = 3; j >= 0; j--)
+	{
+		x.push_back(g[j]);
+	}
+	d = S7[row(v[6][0], v[6][5])][column(v[6][1], v[6][2], v[6][3], v[6][4])];
+	bitset<4> h(d);
+	for (int j = 3; j >= 0; j--)
+	{
+		x.push_back(h[j]);
+	}
+	d = S1[row(v[7][0], v[7][5])][column(v[7][1], v[7][2], v[7][3], v[7][4])];
+	bitset<4> p(d);
+	for (int j = 3; j >= 0; j--)
+	{
+		x.push_back(p[j]);
+	}
+}
+vector<int> pBox(vector<int> a, vector<int> &b)
+{
+	for (int i = 0; i < a.size(); i++)
+	{
+		b.push_back(a[IP_2[i] - 1]);
+	}
+	return b;
 }
 //void encryption(vector<vector<int> > &text, vector<vector<int> > &key, vector<int> cipher, int textRows)  //study this function
 //{
@@ -277,7 +395,6 @@ int main()
 	////conversion to PC-2 table
 	pc2(tempKey, encryptionKey, pc_2_Table);
 	/*print2D(encryptionKey);*/
-	cout << encryptionKey[0].size() << endl;
 	//GENERATION OF THE PLAIN TEXT
 	/*cout << rows << endl;*/
 	//transfer the message to a 2D character vector
@@ -300,14 +417,20 @@ int main()
 	/*print2D(textBin);*/
 	cout << endl;
 	//generate the text to be encrypted
+	//THE ENCRYPTING STARTS HERE
+	//THE ENCRYPTING STARTS HERE
+	//THE ENCRYPTING STARTS HERE
 	for (int i = 32; i < textBin[0].size(); i++)
 	{
 		tempTextRight.push_back(textBin[0][i]);
 	}
 	expansionTable(rightText, tempTextRight);
-	cout << rightText.size() << endl;
 	tempTextRight.clear();
-	/*XOR(encryptionKey, tempText, cipherText, 0);*/
+	XOR(encryptionKey, rightText, cipherText, 0);
+	to2D(temp, cipherText);
+	cipherText.clear();
+	sBox(temp, tempTextRight);
+	pBox(tempTextRight, cipherText);
 	system("pause");
 	return 0;
 }

@@ -15,7 +15,7 @@
 #define SIZE_2 7 //rows of PC-1 table
 
 using namespace std;
-vector< vector<int> > encryptionKey, tempKey, textBin, textAscii, textMsg;    //2D  encryption key,binary text message
+vector< vector<int> > encryptionKey, tempKey, textBin, textAscii, textMsg,temp;    //2D  encryption key,binary text message
 vector<char> key, msg;         //char key and message
 vector<int> asciiKey, PC_1_key, x, asciiMsg, msgTemp, ipMsg, tempTextRight,cipherText,rightText; //convert the cipher int a 2D vector
 int kTemp[64];
@@ -46,5 +46,10 @@ vector<vector < int> > toAscii(vector<vector <char> > &c, vector<vector < int> >
 vector<int> expansionTable(vector<int> &right, vector<int> &temp);
 vector<int> XOR(vector<vector<int> > &k, vector<int> &t, vector<int> &c, int rowkey);
 vector<vector<int> > toBinary(vector<vector<int> > &ascii, vector<vector<int> > &bin, vector<int> &mes, int rows); //mes is a temp vector
+//encryption functions 
+vector<int> pBox(vector<int> a, vector<int> &b);
+void sBox(vector<vector<int> > &v, vector<int> &x);
+int row(int a, int b);
+int column(int a, int b, int c, int d);
 //void encryption(vector<vector<int> > &text, vector<vector<int> > &key, vector<int> cipher, int textRows);
 #endif

@@ -480,7 +480,9 @@ int main()
 			cipher.clear();
 		}
 		passover(cipher, tempTextRight);
-
+		tempTextRight.clear();
+		tempTextLeft.clear();
+		cycle++;
 	}
 	system("pause");
 	return 0;

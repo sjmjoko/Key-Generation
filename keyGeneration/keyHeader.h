@@ -17,11 +17,12 @@
 using namespace std;
 vector< vector<int> > encryptionKey, tempKey, textBin, textAscii, textMsg,temp;    //2D  encryption key,binary text message
 vector<char> key, msg;         //char key and message
-vector<int> asciiKey, PC_1_key, x, asciiMsg, msgTemp, ipMsg, tempTextRight,cipherText,rightText; //convert the cipher int a 2D vector
+vector<int> asciiKey, PC_1_key, x, asciiMsg, msgTemp, ipMsg, tempTextRight, cipherText, rightText,
+tempTextLeft,cipher;//convert the cipher int a 2D vector
 int kTemp[64];
 vector<vector<char> > textChar;
 
-int k = 7, z = 0, l = 0;  //iteration variables
+int k = 7, z = 0, l = 0,cycle=0;  //iteration variables
 char t;
 int ascii, q = 0;
 string  originalKey,message;  //key and message strings
@@ -51,5 +52,7 @@ vector<int> pBox(vector<int> a, vector<int> &b);
 void sBox(vector<vector<int> > &v, vector<int> &x);
 int row(int a, int b);
 int column(int a, int b, int c, int d);
+vector<int> passover(vector<int> &x, vector<int> y);
+vector<int> xor(vector<int> &a, vector<int> b, vector<int> c);
 //void encryption(vector<vector<int> > &text, vector<vector<int> > &key, vector<int> cipher, int textRows);
 #endif

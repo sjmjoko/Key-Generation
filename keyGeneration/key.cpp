@@ -284,6 +284,20 @@ vector<vector<int> > to2D(vector<vector<int> > &v, vector<int> a)
 	}
 	return v;
 }
+vector<vector<int> > dimen(vector<vector<int> > &v, vector<int> a)
+{
+	int t = 0;
+	Resize(v, 8, 8);
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 6; j++)
+		{
+			v[i][j] = a[j + t];
+		}
+		t += 6;
+	}
+	return v;
+}
 //get rows for the Sboxes
 int row(int a, int b)
 {
@@ -384,6 +398,26 @@ vector<int> xor(vector<int> &a, vector<int> &b, vector<int> &c)
 	}
 	return a;
 }
+//convert binary to ASCII
+vector<int> bin2ASCCI(vector<int> &x, vector<int> y)
+{
+	int arr[8], t = 0, q = 0, decimal = 0;
+	while (t < y.size() / 8)
+	{
+		for (int i = 0; i < 8; i++)
+		{
+			arr[i] = y[i + q];
+		}
+		for (int j = 0; j < 8; j++)
+		{
+			decimal = decimal << 1 | arr[j];
+		}
+		x.push_back(decimal);
+		decimal = 0;
+		t++;
+	}
+	return x;
+}
 int main()
 {
 	int k = 7, z = 0, l = 0;
@@ -458,6 +492,7 @@ int main()
 		for (int q = 0; q < 16; q++)                       //perform the encryption schedule 16 times
 		{
 			expansionTable(rightText, tempTextRight);      //retrieve the text and perform the expansion from 32 bits to 48 bits
+			passover(dummy1, tempTextRight);
 			XOR(encryptionKey, rightText, cipherText, q);  //perform XOR of the 48 bit text and key at each round q
 			tempTextRight.clear();                         //vectors are cleared to be re-used
 			rightText.clear();
@@ -469,7 +504,8 @@ int main()
 			xor(cipherText,tempTextLeft,rightText);        //peform XOR to Li and R(i+1)
 			rightText.clear();
 			tempTextLeft.clear();
-			passover(tempTextLeft, cipherText);            //L(i+1) = Ri
+			passover(tempTextLeft, dummy1);                //L(i+1) = Ri
+			dummy1.clear();
 			passover(tempTextRight, cipherText);           //Ri is to be encrypted 16 times
 			cipherText.clear();
 		}
@@ -479,8 +515,8 @@ int main()
 		tempTextLeft.clear();
 		cycle++;                //increment to another row of text
 	}
-	cout << CIPHER.size() << endl;
-	print(CIPHER);
+	dimen(dum, CIPHER);
+	print2D(dum);
 	system("pause");
 	return 0;
 }

@@ -425,8 +425,8 @@ int main()
 	string  originalKey;
 	cout << "Enter the key: ";  //prompt the user to enter the key
 	getline(cin, originalKey);
-	cout << "Enter the message: ";   //prompt the user to enter the plain text
-	getline(cin, message);
+	//cout << "Enter the message: ";   //prompt the user to enter the plain text
+	//getline(cin, message);
 	//transfer key to vector
 	for (int i = 0; i < originalKey.length(); i++)
 	{
@@ -448,7 +448,7 @@ int main()
 	toASCII(asciiKey, key);
 	//populate the bits of the key to an integer array 
 	toBINARY(asciiKey, kTemp);
-	//resize any 2D-arrays to be used
+	/*resize any 2D-arrays to be used*/
 	Resize(tempKey, ROWS, COLUMNS);
 	Resize(encryptionKey, ROWS, PC_2_COLS);
 	Resize(textChar, rows, 8);
@@ -460,63 +460,63 @@ int main()
 	rotationSchedule(tempKey, PC_1_key, x);
 	////conversion to PC-2 table
 	pc2(tempKey, encryptionKey, pc_2_Table);
-	/*print2D(encryptionKey);*/
+	print2D(encryptionKey);
 
-	//GENERATION OF THE PLAIN TEXT
-	//transfer the message to a 2D character vector
-	for (int i = 0; i < rows; i++)
-	{
-		for (int j = 0; j < 8; j++)
-		{
-			t = msg[j + l];
-			textChar[i][j] = t;
-		}
-		l += 8;
-	}
-	//convert the chars to ascii code for each block
-	//convert each char into 8 bits
-	toAscii(textChar, textAscii, rows);
-	//convert the ascii message into binary
-	toBinary(textAscii, textBin, msgTemp, rows);
-	//IP-1 permutation
-	ip1_permutation(textBin, IP_1);
-	/*print2D(textBin);*/
-	cout << endl;
-	//generate the text to be encrypted
-	//THE ENCRYPTING STARTS HERE
-	while (cycle < rows)
-	{
-		for (int i = 0; i < 32; i++) tempTextLeft.push_back(textBin[cycle][i]);  //transfer the left half of the text in a specific row of 64 bits
-		for (int i = 32; i < textBin[cycle].size(); i++) tempTextRight.push_back(textBin[cycle][i]);  //transfer the right half of the text in a specific row of 64 bits
-		
-		for (int q = 0; q < 16; q++)                       //perform the encryption schedule 16 times
-		{
-			expansionTable(rightText, tempTextRight);      //retrieve the text and perform the expansion from 32 bits to 48 bits
-			passover(dummy1, tempTextRight);
-			XOR(encryptionKey, rightText, cipherText, q);  //perform XOR of the 48 bit text and key at each round q
-			tempTextRight.clear();                         //vectors are cleared to be re-used
-			rightText.clear();
-			to2D(temp, cipherText);                        //convert the temporary cipher text to 2D
-			cipherText.clear();
-			sBox(temp, tempTextRight);                     //reduce the cipher text from 48 bits to 32 bits using S-boxes
-			pBox(tempTextRight, rightText);                //perform permutation to the output of the S-Box
-			tempTextRight.clear();
-			xor(cipherText,tempTextLeft,rightText);        //peform XOR to Li and R(i+1)
-			rightText.clear();
-			tempTextLeft.clear();
-			passover(tempTextLeft, dummy1);                //L(i+1) = Ri
-			dummy1.clear();
-			passover(tempTextRight, cipherText);           //Ri is to be encrypted 16 times
-			cipherText.clear();
-		}
-		for (int i = 0; i < tempTextLeft.size(); i++){ CIPHER.push_back(tempTextLeft[i]); }     //push L16 to the cipher text
-		for (int i = 0; i < tempTextRight.size(); i++){ CIPHER.push_back(tempTextRight[i]); }   //push R16 to the cipher text
-		tempTextRight.clear();   //clear this vector as it will be used in until the entire text is encrypted
-		tempTextLeft.clear();
-		cycle++;                //increment to another row of text
-	}
-	dimen(dum, CIPHER);
-	print2D(dum);
+	////GENERATION OF THE PLAIN TEXT
+	////transfer the message to a 2D character vector
+	//for (int i = 0; i < rows; i++)
+	//{
+	//	for (int j = 0; j < 8; j++)
+	//	{
+	//		t = msg[j + l];
+	//		textChar[i][j] = t;
+	//	}
+	//	l += 8;
+	//}
+	////convert the chars to ascii code for each block
+	////convert each char into 8 bits
+	//toAscii(textChar, textAscii, rows);
+	////convert the ascii message into binary
+	//toBinary(textAscii, textBin, msgTemp, rows);
+	////IP-1 permutation
+	//ip1_permutation(textBin, IP_1);
+	///*print2D(textBin);*/
+	//cout << endl;
+	////generate the text to be encrypted
+	////THE ENCRYPTING STARTS HERE
+	//while (cycle < rows)
+	//{
+	//	for (int i = 0; i < 32; i++) tempTextLeft.push_back(textBin[cycle][i]);  //transfer the left half of the text in a specific row of 64 bits
+	//	for (int i = 32; i < textBin[cycle].size(); i++) tempTextRight.push_back(textBin[cycle][i]);  //transfer the right half of the text in a specific row of 64 bits
+	//	
+	//	for (int q = 0; q < 16; q++)                       //perform the encryption schedule 16 times
+	//	{
+	//		expansionTable(rightText, tempTextRight);      //retrieve the text and perform the expansion from 32 bits to 48 bits
+	//		passover(dummy1, tempTextRight);
+	//		XOR(encryptionKey, rightText, cipherText, q);  //perform XOR of the 48 bit text and key at each round q
+	//		tempTextRight.clear();                         //vectors are cleared to be re-used
+	//		rightText.clear();
+	//		to2D(temp, cipherText);                        //convert the temporary cipher text to 2D
+	//		cipherText.clear();
+	//		sBox(temp, tempTextRight);                     //reduce the cipher text from 48 bits to 32 bits using S-boxes
+	//		pBox(tempTextRight, rightText);                //perform permutation to the output of the S-Box
+	//		tempTextRight.clear();
+	//		xor(cipherText,tempTextLeft,rightText);        //peform XOR to Li and R(i+1)
+	//		rightText.clear();
+	//		tempTextLeft.clear();
+	//		passover(tempTextLeft, dummy1);                //L(i+1) = Ri
+	//		dummy1.clear();
+	//		passover(tempTextRight, cipherText);           //Ri is to be encrypted 16 times
+	//		cipherText.clear();
+	//	}
+	//	for (int i = 0; i < tempTextLeft.size(); i++){ CIPHER.push_back(tempTextLeft[i]); }     //push L16 to the cipher text
+	//	for (int i = 0; i < tempTextRight.size(); i++){ CIPHER.push_back(tempTextRight[i]); }   //push R16 to the cipher text
+	//	tempTextRight.clear();   //clear this vector as it will be used in until the entire text is encrypted
+	//	tempTextLeft.clear();
+	//	cycle++;                //increment to another row of text
+	//}
+	//dimen(dum, CIPHER);
+	//print2D(dum);
 	system("pause");
 	return 0;
-}
+} 

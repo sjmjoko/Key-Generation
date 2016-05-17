@@ -16,7 +16,7 @@ int pc_2_Table[] = { 14, 17, 11, 24, 1, 5, 3, 28, 15, 6, 21, 10, 23, 19, 12, 4, 
 40, 51, 45, 33, 48, 44, 49, 39, 56, 34, 53, 46, 42, 50, 36, 29, 32 };
 //IP-1 Table
 int IP_1[] = { 58, 50, 42, 34, 26, 18, 10, 2, 60, 52, 44, 36, 28, 20, 12, 4, 62, 54, 46, 38, 30, 22, 14, 6, 64, 56, 48, 40, 32, 24, 16, 8,
-57, 49, 41, 33, 25, 17, 9, 1, 9, 51, 43, 35, 27, 19, 11, 3, 61, 53, 45, 37, 29, 21, 13, 5, 63, 55, 47, 39, 31, 23, 15, 7 };
+57, 49, 41, 33, 25, 17, 9, 1, 59, 51, 43, 35, 27, 19, 11, 3, 61, 53, 45, 37, 29, 21, 13, 5, 63, 55, 47, 39, 31, 23, 15, 7 };
 //IP-2 Table
 int IP_2[] = { 16 ,7 ,20, 21, 29, 12, 28, 17, 1 ,15, 23, 26, 5 ,18, 31, 10, 2, 8, 24, 14, 32, 32, 27, 3 ,9, 19, 13, 30, 6 ,22 ,11, 4,
 25 };
@@ -173,10 +173,19 @@ vector<vector<int> > pc2(vector<vector<int> > &v, vector<vector<int> > &k, int a
 //perform IP-1 permutation on the plain text
 vector<vector<int> > ip1_permutation(vector<vector<int>> &a, int c[]) //vector confused,vector non confused, ip table
 {
+	vector < vector<int> > d;
+	Resize(d, a.size(), a[0].size());
+	for (int i = 0; i < a.size(); i++)
+	{
+		for (int j = 0; j < a[0].size(); j++)
+		{
+			d[i][j] = a[i][j];
+		}
+	}
 	for (int i = 0; i< a.size(); i++)
 		for (int j = 0; j < a[0].size(); j++)
 		{
-			a[i][j] = a[i][c[j] - 1];
+			a[i][j] = d[i][c[j] - 1];
 		}
 	return a;
 }
@@ -267,7 +276,14 @@ vector<vector<int> > toBinary(vector<vector<int> > &ascii, vector<vector<int> > 
 	}
 	return bin;
 }
-
+void printSide(vector<int> a, int x, int b)
+{
+	for (int i = x; i < b; i++)
+	{
+		cout << a[i];
+	}
+	cout << endl;
+}
 //ENCRYPTION FUNCTIONS
 //convert the 1D 48 bit text to 2D (8x6)
 vector<vector<int> > to2D(vector<vector<int> > &v, vector<int> a)
@@ -425,8 +441,8 @@ int main()
 	string  originalKey;
 	cout << "Enter the key: ";  //prompt the user to enter the key
 	getline(cin, originalKey);
-	//cout << "Enter the message: ";   //prompt the user to enter the plain text
-	//getline(cin, message);
+	cout << "Enter the message: ";   //prompt the user to enter the plain text
+	getline(cin, message);
 	//transfer key to vector
 	for (int i = 0; i < originalKey.length(); i++)
 	{
@@ -444,9 +460,9 @@ int main()
 	int rows = msg.size() / 8;
 	cout << endl;
 	//convert key to ASCII CODE
-	//GENERATION OF THE ENCRYPTION
+	/*GENERATION OF THE ENCRYPTION*/
 	toASCII(asciiKey, key);
-	//populate the bits of the key to an integer array 
+	/*populate the bits of the key to an integer array */
 	toBINARY(asciiKey, kTemp);
 	/*resize any 2D-arrays to be used*/
 	Resize(tempKey, ROWS, COLUMNS);
@@ -456,67 +472,71 @@ int main()
 	Resize(textBin, rows, 64);
 	//perform PC-1 permutation
 	pc1(kTemp, PC_1_key);
+	/*printSide(PC_1_key, 0, 28);
+	printSide(PC_1_key, 28, 56);*/
 	//key rotation schedule
 	rotationSchedule(tempKey, PC_1_key, x);
 	////conversion to PC-2 table
 	pc2(tempKey, encryptionKey, pc_2_Table);
-	print2D(encryptionKey);
-
-	////GENERATION OF THE PLAIN TEXT
-	////transfer the message to a 2D character vector
-	//for (int i = 0; i < rows; i++)
-	//{
-	//	for (int j = 0; j < 8; j++)
-	//	{
-	//		t = msg[j + l];
-	//		textChar[i][j] = t;
-	//	}
-	//	l += 8;
-	//}
-	////convert the chars to ascii code for each block
-	////convert each char into 8 bits
-	//toAscii(textChar, textAscii, rows);
-	////convert the ascii message into binary
-	//toBinary(textAscii, textBin, msgTemp, rows);
-	////IP-1 permutation
-	//ip1_permutation(textBin, IP_1);
-	///*print2D(textBin);*/
-	//cout << endl;
-	////generate the text to be encrypted
-	////THE ENCRYPTING STARTS HERE
-	//while (cycle < rows)
-	//{
-	//	for (int i = 0; i < 32; i++) tempTextLeft.push_back(textBin[cycle][i]);  //transfer the left half of the text in a specific row of 64 bits
-	//	for (int i = 32; i < textBin[cycle].size(); i++) tempTextRight.push_back(textBin[cycle][i]);  //transfer the right half of the text in a specific row of 64 bits
-	//	
-	//	for (int q = 0; q < 16; q++)                       //perform the encryption schedule 16 times
-	//	{
-	//		expansionTable(rightText, tempTextRight);      //retrieve the text and perform the expansion from 32 bits to 48 bits
-	//		passover(dummy1, tempTextRight);
-	//		XOR(encryptionKey, rightText, cipherText, q);  //perform XOR of the 48 bit text and key at each round q
-	//		tempTextRight.clear();                         //vectors are cleared to be re-used
-	//		rightText.clear();
-	//		to2D(temp, cipherText);                        //convert the temporary cipher text to 2D
-	//		cipherText.clear();
-	//		sBox(temp, tempTextRight);                     //reduce the cipher text from 48 bits to 32 bits using S-boxes
-	//		pBox(tempTextRight, rightText);                //perform permutation to the output of the S-Box
-	//		tempTextRight.clear();
-	//		xor(cipherText,tempTextLeft,rightText);        //peform XOR to Li and R(i+1)
-	//		rightText.clear();
-	//		tempTextLeft.clear();
-	//		passover(tempTextLeft, dummy1);                //L(i+1) = Ri
-	//		dummy1.clear();
-	//		passover(tempTextRight, cipherText);           //Ri is to be encrypted 16 times
-	//		cipherText.clear();
-	//	}
-	//	for (int i = 0; i < tempTextLeft.size(); i++){ CIPHER.push_back(tempTextLeft[i]); }     //push L16 to the cipher text
-	//	for (int i = 0; i < tempTextRight.size(); i++){ CIPHER.push_back(tempTextRight[i]); }   //push R16 to the cipher text
-	//	tempTextRight.clear();   //clear this vector as it will be used in until the entire text is encrypted
-	//	tempTextLeft.clear();
-	//	cycle++;                //increment to another row of text
-	//}
-	//dimen(dum, CIPHER);
-	//print2D(dum);
+	/*print2D(encryptionKey);*/
+	
+	//GENERATION OF THE PLAIN TEXT
+	//transfer the message to a 2D character vector
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			t = msg[j + l];
+			textChar[i][j] = t;
+		}
+		l += 8;
+	}
+	//convert the chars to ascii code for each block
+	//convert each char into 8 bits
+	toAscii(textChar, textAscii, rows);
+	//convert the ascii message into binary
+	toBinary(textAscii, textBin, msgTemp, rows);
+	/*print2D(textBin);*/
+	//IP-1 permutation
+	ip1_permutation(textBin, IP_1);
+	/*print2D(textBin);*/
+	
+	cout << endl;
+	//generate the text to be encrypted
+	//THE ENCRYPTING STARTS HERE
+	while (cycle < rows)
+	{
+		for (int i = 0; i < 32; i++) tempTextLeft.push_back(textBin[cycle][i]);  //transfer the left half of the text in a specific row of 64 bits
+		for (int i = 32; i < textBin[cycle].size(); i++) tempTextRight.push_back(textBin[cycle][i]);  //transfer the right half of the text in a specific row of 64 bits
+		
+		for (int q = 0; q < 16; q++)                       //perform the encryption schedule 16 times
+		{
+			expansionTable(rightText, tempTextRight);      //retrieve the text and perform the expansion from 32 bits to 48 bits
+			passover(dummy1, tempTextRight);
+			XOR(encryptionKey, rightText, cipherText, q);  //perform XOR of the 48 bit text and key at each round q
+			tempTextRight.clear();                         //vectors are cleared to be re-used
+			rightText.clear();
+			to2D(temp, cipherText);                        //convert the temporary cipher text to 2D
+			cipherText.clear();
+			sBox(temp, tempTextRight);                     //reduce the cipher text from 48 bits to 32 bits using S-boxes
+			pBox(tempTextRight, rightText);                //perform permutation to the output of the S-Box
+			tempTextRight.clear();
+			xor(cipherText,tempTextLeft,rightText);        //peform XOR to Li and R(i+1)
+			rightText.clear();
+			tempTextLeft.clear();
+			passover(tempTextLeft, dummy1);                //L(i+1) = Ri
+			dummy1.clear();
+			passover(tempTextRight, cipherText);           //Ri is to be encrypted 16 times
+			cipherText.clear();
+		}
+		for (int i = 0; i < tempTextLeft.size(); i++){ CIPHER.push_back(tempTextLeft[i]); }     //push L16 to the cipher text
+		for (int i = 0; i < tempTextRight.size(); i++){ CIPHER.push_back(tempTextRight[i]); }   //push R16 to the cipher text
+		tempTextRight.clear();   //clear this vector as it will be used in until the entire text is encrypted
+		tempTextLeft.clear();
+		cycle++;                //increment to another row of text
+	}
+	dimen(dum, CIPHER);
+	print2D(dum);
 	system("pause");
 	return 0;
 } 

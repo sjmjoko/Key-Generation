@@ -12,7 +12,7 @@
 int pc_1_Table[] = { 57, 49, 41, 33, 25, 17, 9, 1, 58, 50, 42, 34, 26, 18, 10, 2, 59, 51, 43, 35, 27, 19, 11, 3, 60, 52, 44,
 36, 63, 55, 47, 39, 31, 23, 15, 7, 62, 54, 46, 38, 30, 22, 14, 6, 61, 53, 45, 37, 29, 21, 13, 5, 28, 20, 12, 4 };
 //PC-2 Table
-int pc_2_Table[] = { 14, 17, 11, 24, 1, 5, 3, 28, 15, 6, 21, 10, 23, 19, 12, 4, 26, 8, 16, 7, 27, 20, 13, 2, 41, 52, 32, 37, 47, 55, 30,
+int pc_2_Table[] = { 14, 17, 11, 24, 1, 5, 3, 28, 15, 6, 21, 10, 23, 19, 12, 4, 26, 8, 16, 7, 27, 20, 13, 2, 41, 52, 31, 37, 47, 55, 30,
 40, 51, 45, 33, 48, 44, 49, 39, 56, 34, 53, 46, 42, 50, 36, 29, 32 };
 //IP-1 Table
 int IP_1[] = { 58, 50, 42, 34, 26, 18, 10, 2, 60, 52, 44, 36, 28, 20, 12, 4, 62, 54, 46, 38, 30, 22, 14, 6, 64, 56, 48, 40, 32, 24, 16, 8,
@@ -300,17 +300,17 @@ vector<vector<int> > to2D(vector<vector<int> > &v, vector<int> a)
 	}
 	return v;
 }
-vector<vector<int> > dimen(vector<vector<int> > &v, vector<int> a)
+vector<vector<int> > dimen(vector<vector<int> > &v, vector<int> a, int r)
 {
 	int t = 0;
-	Resize(v, 8, 8);
-	for (int i = 0; i < 8; i++)
+	Resize(v, r, 64);
+	for (int i = 0; i < r; i++)
 	{
-		for (int j = 0; j < 6; j++)
+		for (int j = 0; j < 64; j++)
 		{
 			v[i][j] = a[j + t];
 		}
-		t += 6;
+		t += 64;
 	}
 	return v;
 }
@@ -477,9 +477,10 @@ int main()
 	printSide(PC_1_key, 28, 56);*/
 	//key rotation schedule
 	rotationSchedule(tempKey, PC_1_key, x);
+	print2D(tempKey);
 	////conversion to PC-2 table
 	pc2(tempKey, encryptionKey, pc_2_Table);
-	print2D(encryptionKey);
+	//print2D(encryptionKey);
 	
 	//GENERATION OF THE PLAIN TEXT
 	//transfer the message to a 2D character vector
@@ -512,7 +513,7 @@ int main()
 		
 		for (int q = 0; q < 16; q++)                       //perform the encryption schedule 16 times
 		{
-			dummy1 = tempTextRight;                //temp L(i+1) = Ri
+			dummy1 = tempTextRight;                        //temp L(i+1) = Ri
 			expansionTable(rightText, tempTextRight);      //retrieve the text and perform the expansion from 32 bits to 48 bits
 			XOR(encryptionKey, rightText, cipherText, q);  //perform XOR of the 48 bit text and key at each round q
 			tempTextRight.clear();                         //vectors are cleared to be re-used
@@ -524,7 +525,7 @@ int main()
 			tempTextRight.clear();
 			xor(cipherText,tempTextLeft,rightText);        //peform XOR to Li and R(i+1)
 			rightText.clear();
-			tempTextLeft = dummy1;                //L(i+1) = Ri
+			tempTextLeft = dummy1;                         //L(i+1) = Ri
 			passover(tempTextRight, cipherText);           //Ri is to be encrypted 16 times
 			cipherText.clear();
 		}
@@ -534,8 +535,21 @@ int main()
 		tempTextLeft.clear();
 		cycle++;                //increment to another row of text
 	}
-	dimen(dum, CIPHER);
-	print2D(dum);
+	int length = CIPHER.size() / 8,decimal=0,tr=0;
+	for (int i = 0; i < length; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			decimal = decimal << 1 | CIPHER[j + tr];
+		}
+		numbers.push_back(decimal);
+		decimal = 0;
+		tr += 8;
+	}
+	print(numbers);
+	/*print(CIPHER);*/
+	/*dimen(dum, CIPHER,rows);
+	print2D(dum);*/
 	system("pause");
 	return 0;
 } 

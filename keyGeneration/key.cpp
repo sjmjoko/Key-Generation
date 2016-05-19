@@ -23,6 +23,8 @@ int IP_2[] = { 16 ,7 ,20, 21, 29, 12, 28, 17, 1 ,15, 23, 26, 5 ,18, 31, 10, 2, 8
 //Expansion Table
 int expansion[] = { 32, 1, 2, 3, 4, 5, 4, 5, 6, 7, 8, 9, 8, 9, 10, 11, 12, 13, 12, 13, 14, 15, 16, 17,
 16, 17, 18, 19, 20, 21, 20, 21, 22, 23, 24, 25, 24, 25, 26, 27, 28, 29, 28, 29, 30, 31, 32, 1 };
+int finalInversePerm[] = { 40, 8, 48, 16, 56, 24, 64, 32, 39, 7, 47, 15, 55, 23, 63, 31, 38, 6, 46, 14, 54, 22, 62, 30, 37, 5, 45, 13, 53, 21, 61, 29, 36, 4, 44,
+12, 52, 20, 60, 28, 35, 3, 43, 11, 51, 19, 59, 27, 34, 2, 42, 10, 50, 18, 58, 26, 33, 1, 41, 9, 49, 17, 57, 25 };
 //S-BOX ARRAYS
 //S1 s-box table
 int S1[][16] = { { 14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7 },
@@ -434,11 +436,22 @@ vector<int> bin2ASCCI(vector<int> &x, vector<int> y)
 	}
 	return x;
 }
+vector<int> finalCipher(vector<int> &v, vector<int> w, int a[])
+{
+	for (int i = 0; i < 64; i++)
+	{
+		v.push_back(w[a[i] - 1]);
+	}
+	return v;
+}
 int main()
 {
-	int k = 7, z = 0, l = 0;
+	int k = 7, z = 0, l = 0,option,keyAccess;
 	char t;
 	string  originalKey;
+	cout << "1. Encrypt\n" << "2. Decrypt\n";
+	cin >> option;
+	cin.ignore();
 	cout << "Enter the key: ";  //prompt the user to enter the key
 	getline(cin, originalKey);
 	cout << "Enter the message: ";   //prompt the user to enter the plain text
@@ -504,6 +517,10 @@ int main()
 	/*print2D(textBin);*/
 	
 	cout << endl;
+	if (option == 2)
+	{
+		keyAccess = 15;
+	}
 	//generate the text to be encrypted
 	//THE ENCRYPTING STARTS HERE
 	while (cycle < rows)
@@ -515,7 +532,14 @@ int main()
 		{
 			dummy1 = tempTextRight;                        //temp L(i+1) = Ri
 			expansionTable(rightText, tempTextRight);      //retrieve the text and perform the expansion from 32 bits to 48 bits
-			XOR(encryptionKey, rightText, cipherText, q);  //perform XOR of the 48 bit text and key at each round q
+			if (option == 1)
+			{
+				XOR(encryptionKey, rightText, cipherText, q);  //perform XOR of the 48 bit text and key at each round q
+			}
+			else if (option==2)
+			{
+				XOR(encryptionKey, rightText, cipherText, keyAccess);  //perform XOR of the 48 bit text and key at each round q
+			}
 			tempTextRight.clear();                         //vectors are cleared to be re-used
 			rightText.clear();
 			to2D(temp, cipherText);                        //convert the temporary cipher text to 2D
@@ -528,19 +552,25 @@ int main()
 			tempTextLeft = dummy1;                         //L(i+1) = Ri
 			passover(tempTextRight, cipherText);           //Ri is to be encrypted 16 times
 			cipherText.clear();
+			if (option == 2)
+			{
+				keyAccess--;
+			}
 		}
-		for (int i = 0; i < tempTextLeft.size(); i++){ CIPHER.push_back(tempTextLeft[i]); }     //push L16 to the cipher text
 		for (int i = 0; i < tempTextRight.size(); i++){ CIPHER.push_back(tempTextRight[i]); }   //push R16 to the cipher text
+		for (int i = 0; i < tempTextLeft.size(); i++){ CIPHER.push_back(tempTextLeft[i]); }     //push L16 to the cipher text
+		
 		tempTextRight.clear();   //clear this vector as it will be used in until the entire text is encrypted
 		tempTextLeft.clear();
 		cycle++;                //increment to another row of text
 	}
+	finalCipher(perm, CIPHER, finalInversePerm);
 	int length = CIPHER.size() / 8,decimal=0,tr=0;
 	for (int i = 0; i < length; i++)
 	{
 		for (int j = 0; j < 8; j++)
 		{
-			decimal = decimal << 1 | CIPHER[j + tr];
+			decimal = decimal << 1 | perm[j + tr];
 		}
 		numbers.push_back(decimal);
 		decimal = 0;

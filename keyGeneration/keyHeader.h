@@ -18,7 +18,7 @@ using namespace std;
 vector< vector<int> > encryptionKey, tempKey, textBin, textAscii, textMsg,temp,dum;    //2D  encryption key,binary text message
 vector<char> key, msg;         //char key and message
 vector<int> asciiKey, PC_1_key, x, asciiMsg, msgTemp, ipMsg, tempTextRight, 
-      cipherText, rightText,CIPHER,dummy1,dummy2, numbers,
+      cipherText, rightText,CIPHER,dummy1,dummy2, numbers,perm,
 tempTextLeft,cipher;//convert the cipher int a 2D vector
 int kTemp[64];
 vector<vector<char> > textChar;

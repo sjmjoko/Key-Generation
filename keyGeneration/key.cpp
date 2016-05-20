@@ -436,13 +436,31 @@ vector<int> bin2ASCCI(vector<int> &x, vector<int> y)
 	}
 	return x;
 }
-vector<int> finalCipher(vector<int> &v, vector<int> w, int a[])
+vector<vector<int> > finalCipher(vector<vector<int> > &v, vector<int> w, int a[])
 {
-	for (int i = 0; i < 64; i++)
+	vector < vector<int> > d;
+	int temp=0;
+	Resize(d, w.size()/64, 64);
+	for (int i = 0; i < w.size()/64; i++)
 	{
-		v.push_back(w[a[i] - 1]);
+		for (int j = 0; j < 64; j++)
+		{
+			d[i][j] = w[j+temp];
+		}
+		temp += 64;
 	}
+	for (int i = 0; i< d.size(); i++)
+		for (int j = 0; j < d[0].size(); j++)
+		{
+			v[i][j] = d[i][a[j] - 1];
+		}
 	return v;
+}
+int deci(int a, int b, int c, int d, int e, int f, int g, int h)
+{
+	int x;
+	x = 128 * a + 64 * b + 32 * c + 16 * d + 8 * e + 4 * f + 2 * g + h;
+	return x;
 }
 int main()
 {
@@ -511,7 +529,6 @@ int main()
 	toAscii(textChar, textAscii, rows);
 	//convert the ascii message into binary
 	toBinary(textAscii, textBin, msgTemp, rows);
-	/*print2D(textBin);*/
 	//IP-1 permutation
 	ip1_permutation(textBin, IP_1);
 	/*print2D(textBin);*/
@@ -559,25 +576,37 @@ int main()
 		}
 		for (int i = 0; i < tempTextRight.size(); i++){ CIPHER.push_back(tempTextRight[i]); }   //push R16 to the cipher text
 		for (int i = 0; i < tempTextLeft.size(); i++){ CIPHER.push_back(tempTextLeft[i]); }     //push L16 to the cipher text
-		
+		keyAccess = 15;
 		tempTextRight.clear();   //clear this vector as it will be used in until the entire text is encrypted
 		tempTextLeft.clear();
 		cycle++;                //increment to another row of text
 	}
+	Resize(perm, CIPHER.size() / 64, 64);
 	finalCipher(perm, CIPHER, finalInversePerm);
-	int length = CIPHER.size() / 8,decimal=0,tr=0;
-	for (int i = 0; i < length; i++)
+	int length = CIPHER.size() / 8, tr = 0, it = 7, sum = 0;
+	for (int i = 0; i < rows; i++)
 	{
-		for (int j = 0; j < 8; j++)
+		for (int k = 0; k < 8; k++)
 		{
-			decimal = decimal << 1 | perm[j + tr];
+			for (int j = 0; j < 8; j++)
+			{
+				sum += perm[i][j + tr] * pow(2, it);
+				it--;
+			}
+			it = 7;
+			numbers.push_back(sum);
+			sum = 0;
+			tr += 8;
 		}
-		numbers.push_back(decimal);
-		decimal = 0;
-		tr += 8;
+		tr = 0;
+	}
+	vector<char> character;
+	for (int i = 0; i < numbers.size(); i++)
+	{
+		character.push_back(numbers[i] + 48);
 	}
 	print(numbers);
-	/*print(CIPHER);*/
+	print(character);
 	/*dimen(dum, CIPHER,rows);
 	print2D(dum);*/
 	system("pause");

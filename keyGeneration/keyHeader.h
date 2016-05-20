@@ -8,17 +8,17 @@
 #include<vector>
 #include<array>
 #include<algorithm>
-#define ROWS 16
-#define COLUMNS 56
+#define ROWS 16    //key rows
+#define COLUMNS 56   
 #define PC_2_COLS 48
 #define SIZE_1 8  //rows and columns
 #define SIZE_2 7 //rows of PC-1 table
 
 using namespace std;
-vector< vector<int> > encryptionKey, tempKey, textBin, textAscii, textMsg,temp,dum;    //2D  encryption key,binary text message
+vector< vector<int> > encryptionKey, tempKey, textBin, textAscii, textMsg,temp,dum,perm;    //2D  encryption key,binary text message
 vector<char> key, msg;         //char key and message
 vector<int> asciiKey, PC_1_key, x, asciiMsg, msgTemp, ipMsg, tempTextRight, 
-      cipherText, rightText,CIPHER,dummy1,dummy2, numbers,perm,
+      cipherText, rightText,CIPHER,dummy1,dummy2, numbers,
 tempTextLeft,cipher;//convert the cipher int a 2D vector
 int kTemp[64];
 vector<vector<char> > textChar;
